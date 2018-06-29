@@ -6,12 +6,12 @@ using System.Linq;
 namespace HtmlCodeBuilder
 {
 	/// <summary>
-	/// Represents a html tag
+	/// Represents a HTML tag
 	/// </summary>
 	class HtmlTag
 	{
 		/// <summary>
-		/// Defines which tag to representant
+		/// Defines which tag to represent
 		/// </summary>
 		public string Type { get; set; }
 
@@ -170,8 +170,8 @@ namespace HtmlCodeBuilder
 		/// <summary>
 		/// Add a new style to the tag
 		/// </summary>
-		/// <param name="cssOption">Name of the css option</param>
-		/// <param name="value">Value of the css option</param>
+		/// <param name="cssOption">Name of the CSS option</param>
+		/// <param name="value">Value of the CSS option</param>
 		/// <returns>Updates instance of tag</returns>
 		public HtmlTag AddStyle(string cssOption, string value)
 		{
@@ -210,9 +210,9 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
-		/// Remove css option from the tag
+		/// Remove CSS option from the tag
 		/// </summary>
-		/// <param name="cssOption">Name of the css option</param>
+		/// <param name="cssOption">Name of the CSS option</param>
 		/// <returns>Updates instance of tag</returns>
 		public HtmlTag RemoveStyle(string cssOption)
 		{
@@ -255,20 +255,20 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <remarks>
 		/// Call:
-		/// 	RemoveChild("td", 2);
+		///	 RemoveChild("td", 2);
 		/// 
 		/// Before:
-		/// 	<tr>
-		/// 		<td>Pos 1</td>
-		/// 		<td>Pos 2</td>
-		/// 		<td>Pos 3</td>
-		/// 	</tr>
+		///	 <tr>
+		///		 <td>Pos 1</td>
+		///		 <td>Pos 2</td>
+		///		 <td>Pos 3</td>
+		///	 </tr>
 		/// 
 		/// After:
-		/// 	<tr>
-		/// 		<td>Pos 1</td>
-		/// 		<td>Pos 3</td>
-		/// 	</tr>
+		///	 <tr>
+		///		 <td>Pos 1</td>
+		///		 <td>Pos 3</td>
+		///	 </tr>
 		/// </remarks>
 		/// <param name="type">Type of the child to remove</param>
 		/// <param name="pos">Position of the child</param>
@@ -293,19 +293,19 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
-		/// Create string with html code
+		/// Create string with HTML code
 		/// </summary>
-		/// <returns>String with html code</returns>
+		/// <returns>String with HTML code</returns>
 		public override string ToString()
 		{
 			return ToString(0);
 		}
 
 		/// <summary>
-		/// Create string with html code
+		/// Create string with HTML code
 		/// </summary>
 		/// <param name="indentation">Indentation of the root element</param>
-		/// <returns>String with html code</returns>
+		/// <returns>String with HTML code</returns>
 		public string ToString(int indentation)
 		{
 			var builderHtmlTag = new StringBuilder();

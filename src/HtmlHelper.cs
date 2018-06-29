@@ -6,7 +6,7 @@ using System.Text;
 namespace HtmlCodeBuilder
 {
 	/// <summary>
-	/// Special methods to help construct html code
+	/// Special methods to help construct HTML code
 	/// </summary>
 	static class HtmlHelper
 	{
@@ -46,16 +46,16 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
-		/// Group values to the same css option
+		/// Group values to the same CSS option
 		/// </summary>
-		/// <param name="htmlStyles">Set html styles</param>
-		/// <returns>Groupped list</returns>
+		/// <param name="htmlStyles">Set HTML styles</param>
+		/// <returns>Grouped list</returns>
 		private static List<HtmlStyle> PrepareStyles(IEnumerable<HtmlStyle> htmlStyles)
 		{
 			var builder = new StringBuilder();
 			var res = new List<HtmlStyle>();
 
-			// Group styles with same css option
+			// Group styles with same CSS option
 			var groupped = new Dictionary<string, List<string>>();
 			foreach (HtmlStyle a in htmlStyles)
 			{
@@ -65,7 +65,7 @@ namespace HtmlCodeBuilder
 				}
 			}
 
-			// Construct single css options including values
+			// Construct single CSS options including values
 			foreach (KeyValuePair<string, List<string>> entry in groupped.OrderBy(e => e.Key))
 			{
 				if (entry.Value.Count > 0)
@@ -94,7 +94,7 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
-		/// Group attributes with the same name and remove double entries
+		/// Converts a given list of attributes to a string. Attributes with the same name are grouped and duplicated entries removed.
 		/// </summary>
 		/// <param name="attributes">List with all attributes</param>
 		/// <returns>All attributes ready to be embedded into HTML tag</returns>

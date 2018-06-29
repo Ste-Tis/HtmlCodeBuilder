@@ -1,7 +1,7 @@
 ﻿namespace HtmlCodeBuilder
 {
 	/// <summary>
-	/// Store a class declaration for an html tag
+	/// Store a class declaration for an HTML tag
 	/// </summary>
 	class HtmlClass : HtmlAttribute
 	{

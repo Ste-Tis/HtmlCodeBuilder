@@ -1,7 +1,7 @@
 ﻿namespace HtmlCodeBuilder
 {
 	/// <summary>
-	/// Store a simple attribte for an html tag
+	/// Store a simple attribute for an HTML tag
 	/// </summary>
 	class HtmlAttribute
 	{
@@ -11,7 +11,7 @@
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Value fo the attribute
+		/// Value for the attribute
 		/// </summary>
 		public string Value { get; set; }
 
