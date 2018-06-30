@@ -8,7 +8,7 @@ namespace HtmlCodeBuilder
 	/// <summary>
 	/// Represents a HTML tag
 	/// </summary>
-	class HtmlTag
+	public class HtmlTag
 	{
 		/// <summary>
 		/// Defines which tag to represent
@@ -36,10 +36,22 @@ namespace HtmlCodeBuilder
 		public HtmlTag() { }
 
 		/// <summary>
+		/// Create simple tag
+		/// </summary>
+		/// <param name="type">Tag type</param>
+		/// <param name="content">Content of tag</param>
+		/// <param name="encodeContent">Encode content</param>
+		public HtmlTag(string type, string content, bool encodeContent = true)
+		{
+			Type = type;
+			Content =  (encodeContent ? HtmlHelper.HtmlEncode(content) : content);
+		}
+
+		/// <summary>
 		/// Add a new attribute to the tag
 		/// </summary>
 		/// <param name="htmlAttribute">Attribute</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddAttribute(HtmlAttribute htmlAttribute)
 		{
 			if (Attributes == null)
@@ -58,20 +70,69 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <param name="name">Name of the attribute</param>
 		/// <param name="value">Value of the attribute</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddAttribute(string name, string value)
 		{
 			return AddAttribute(new HtmlAttribute(name, value));
 		}
 
 		/// <summary>
+		/// Add multiple attributes to the tag
+		/// </summary>
+		/// <param name="htmlAttributes">Attributes</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddAttributes(HtmlAttribute[] htmlAttributes)
+		{
+			foreach (HtmlAttribute value in htmlAttributes)
+			{
+				AddAttribute(value);
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Add multiple attributes to the tag
+		/// </summary>
+		/// <param name="htmlAttributes">Attributes</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddAttributes(string[][] htmlAttributes)
+		{
+			foreach (string[] attribute in htmlAttributes)
+			{
+				if (attribute.Length >= 2)
+				{
+					AddAttribute(new HtmlAttribute(attribute[0], attribute[1]));
+				}
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Remove all attributes at once
+		/// </summary>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveAllAttributes()
+		{
+			Attributes.RemoveAll(e => e.GetType() == typeof(HtmlAttribute));
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
+			return this;
+		}
+
+		/// <summary>
 		/// Remove attribute with given name from tag
 		/// </summary>
 		/// <param name="name">Name of attribute</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveAttribute(string name)
 		{
 			Attributes.RemoveAll(e => e.Name == name);
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
 			return this;
 		}
 
@@ -79,7 +140,7 @@ namespace HtmlCodeBuilder
 		/// Add a new class to the tag
 		/// </summary>
 		/// <param name="htmlClass">Class</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddClass(HtmlClass htmlClass)
 		{
 			if (Attributes == null)
@@ -101,7 +162,7 @@ namespace HtmlCodeBuilder
 		/// Add a new class to the tag
 		/// </summary>
 		/// <param name="value">Name of the class</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddClass(string value)
 		{
 			return AddClass(new HtmlClass(value));
@@ -111,7 +172,7 @@ namespace HtmlCodeBuilder
 		/// Add multiple classes to the tag
 		/// </summary>
 		/// <param name="htmlClasses">Classes</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddClasses(HtmlClass[] htmlClasses)
 		{
 			foreach (HtmlClass value in htmlClasses)
@@ -125,7 +186,7 @@ namespace HtmlCodeBuilder
 		/// Add multiple classes to the tag
 		/// </summary>
 		/// <param name="values">Name of the class</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddClasses(string[] values)
 		{
 			foreach (string value in values)
@@ -136,13 +197,31 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
+		/// Remove all classes at once
+		/// </summary>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveAllClasses()
+		{
+			Attributes.RemoveAll(e => e.GetType() == typeof(HtmlClass));
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
+			return this;
+		}
+
+		/// <summary>
 		/// Remove class from the tag
 		/// </summary>
 		/// <param name="value">Name of the class</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveClass(string value)
 		{
 			Attributes.RemoveAll(e => e.Value == value);
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
 			return this;
 		}
 
@@ -150,7 +229,7 @@ namespace HtmlCodeBuilder
 		/// Add a new style to the tag
 		/// </summary>
 		/// <param name="htmlStyle">Style</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddStyle(HtmlStyle htmlStyle)
 		{
 			if (Attributes == null)
@@ -172,7 +251,7 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <param name="cssOption">Name of the CSS option</param>
 		/// <param name="value">Value of the CSS option</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddStyle(string cssOption, string value)
 		{
 			return AddStyle(new HtmlStyle(cssOption, value));
@@ -182,7 +261,7 @@ namespace HtmlCodeBuilder
 		/// Add multiple styles to the tag
 		/// </summary>
 		/// <param name="htmlStyles">Styles</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddStyles(HtmlStyle[] htmlStyles)
 		{
 			foreach (HtmlStyle value in htmlStyles)
@@ -196,7 +275,7 @@ namespace HtmlCodeBuilder
 		/// Add multiple styles to the tag
 		/// </summary>
 		/// <param name="htmlStyles">Styles</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddStyles(string[][] htmlStyles)
 		{
 			foreach (string[] style in htmlStyles)
@@ -210,21 +289,34 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
+		/// Remove all CSS options at once
+		/// </summary>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveAllStyles()
+		{
+			Attributes.RemoveAll(e => e.GetType() == typeof(HtmlStyle));
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
+			return this;
+		}
+
+		/// <summary>
 		/// Remove CSS option from the tag
 		/// </summary>
 		/// <param name="cssOption">Name of the CSS option</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveStyle(string cssOption)
 		{
-			Attributes.RemoveAll(e => e.Name == cssOption);
-			return this;
+			return RemoveAttribute(cssOption);
 		}
 
 		/// <summary>
 		/// Add child to the tag
 		/// </summary>
 		/// <param name="child">Child tag</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag AddChild(HtmlTag child)
 		{
 			if (Children == null)
@@ -240,13 +332,41 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
+		/// Add multiple child's to the tag
+		/// </summary>
+		/// <param name="children">Tags of new children</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddChildren(HtmlTag[] children)
+		{
+			foreach(HtmlTag child in children)
+			{
+				AddChild(child);
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Remove all children tags
+		/// </summary>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveAllChildren()
+		{
+			Children = null;
+			return this;
+		}
+
+		/// <summary>
 		/// Remove all children of a given type from the tag
 		/// </summary>
 		/// <param name="type">Type of the children to remove</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveChildren(string type)
 		{
-			Children.Where(e => e.Type != type).ToArray();
+			Children.RemoveAll(e => e.Type == type);
+			if (Children.Count == 0)
+			{
+				Children = null;
+			}
 			return this;
 		}
 
@@ -272,7 +392,7 @@ namespace HtmlCodeBuilder
 		/// </remarks>
 		/// <param name="type">Type of the child to remove</param>
 		/// <param name="pos">Position of the child</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveChild(string type, int pos)
 		{
 			foreach (HtmlTag c in Children)
@@ -282,7 +402,8 @@ namespace HtmlCodeBuilder
 					pos--;
 				}
 
-				if (pos == 0)
+				// Counting starts from 0
+				if (pos == -1)
 				{
 					Children.Remove(c);
 					break;
@@ -348,7 +469,7 @@ namespace HtmlCodeBuilder
 		/// Create a new tag
 		/// </summary>
 		/// <param name="type">Type of the tag</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type)
 		{
 			return new HtmlTag() { Type = type };
@@ -360,7 +481,7 @@ namespace HtmlCodeBuilder
 		/// <param name="type">Type of the tag</param>
 		/// <param name="content">Text content of the tag</param>
 		/// <param name="encodeContent">Encode content</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, string content, bool encodeContent = true)
 		{
 			return new HtmlTag() { Type = type, Content = (encodeContent ? HtmlHelper.HtmlEncode(content) : content) };
@@ -373,7 +494,7 @@ namespace HtmlCodeBuilder
 		/// <param name="content">Text content of the tag</param>
 		/// <param name="child">Child of the tag</param>
 		/// <param name="encodeContent">Encode content</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, string content, HtmlTag child, bool encodeContent = true)
 		{
 			return new HtmlTag() { Type = type, Content = (encodeContent ? HtmlHelper.HtmlEncode(content) : content), Children = new List<HtmlTag> { child } };
@@ -386,7 +507,7 @@ namespace HtmlCodeBuilder
 		/// <param name="content">Text content of the tag</param>
 		/// <param name="children">Children of the tag</param>
 		/// <param name="encodeContent">Encode content</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, string content, List<HtmlTag> children, bool encodeContent = true)
 		{
 			return new HtmlTag() { Type = type, Content = (encodeContent ? HtmlHelper.HtmlEncode(content) : content), Children = children };
@@ -399,7 +520,7 @@ namespace HtmlCodeBuilder
 		/// <param name="content">Text content of the tag</param>
 		/// <param name="children">Children of the tag</param>
 		/// <param name="encodeContent">Encode content</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, string content, HtmlTag[] children, bool encodeContent = true)
 		{
 			return new HtmlTag() { Type = type, Content = (encodeContent ? HtmlHelper.HtmlEncode(content) : content), Children = children.ToList() };
@@ -410,7 +531,7 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <param name="type">Type of the tag</param>
 		/// <param name="child">Child of the tag</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, HtmlTag child)
 		{
 			return new HtmlTag() { Type = type, Children = new List<HtmlTag> { child } };
@@ -421,7 +542,7 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <param name="type">Type of the tag</param>
 		/// <param name="children">Children of the tag</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, List<HtmlTag> children)
 		{
 			return new HtmlTag() { Type = type, Children = children };
@@ -432,7 +553,7 @@ namespace HtmlCodeBuilder
 		/// </summary>
 		/// <param name="type">Type of the tag</param>
 		/// <param name="children">Children of the tag</param>
-		/// <returns>Updates instance of tag</returns>
+		/// <returns>Updated instance of tag</returns>
 		public static HtmlTag Create(string type, HtmlTag[] children)
 		{
 			return new HtmlTag() { Type = type, Children = children.ToList() };

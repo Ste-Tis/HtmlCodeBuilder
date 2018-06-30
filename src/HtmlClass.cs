@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Store a class declaration for an HTML tag
 	/// </summary>
-	class HtmlClass : HtmlAttribute
+	public class HtmlClass : HtmlAttribute
 	{
 		/// <summary>
 		/// Name of the attribute is always 'class'

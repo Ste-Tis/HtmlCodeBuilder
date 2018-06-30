@@ -8,7 +8,7 @@ namespace HtmlCodeBuilder
 	/// <summary>
 	/// Special methods to help construct HTML code
 	/// </summary>
-	static class HtmlHelper
+	internal static class HtmlHelper
 	{
 		/// <summary>
 		/// Add a new value to the values list of the dictionary
@@ -73,15 +73,16 @@ namespace HtmlCodeBuilder
 					builder.Clear();
 
 					builder.Append($"{entry.Key}: ");
-					for (int i = 0; i < entry.Value.Count; i++)
+					var sortedValues = entry.Value.OrderBy(e => e).ToList();
+					for (int i = 0; i < sortedValues.Count; i++)
 					{
 						if (i == 0)
 						{
-							builder.Append(entry.Value[i]);
+							builder.Append(sortedValues[i]);
 						}
 						else
 						{
-							builder.Append($" {entry.Value[i]}");
+							builder.Append($" {sortedValues[i]}");
 						}
 					}
 					builder.Append(";");
@@ -129,15 +130,16 @@ namespace HtmlCodeBuilder
 				foreach (KeyValuePair<string, List<string>> entry in groupped.OrderBy(e => e.Key))
 				{
 					builder.Append($@" {entry.Key}=""");
-					for (int i = 0; i < entry.Value.Count; i++)
+					var sortedValues = entry.Value.OrderBy(e => e).ToList();
+					for (int i = 0; i < sortedValues.Count; i++)
 					{
 						if (i == 0)
 						{
-							builder.Append(entry.Value[i]);
+							builder.Append(sortedValues[i]);
 						}
 						else
 						{
-							builder.Append($" {entry.Value[i]}");
+							builder.Append($" {sortedValues[i]}");
 						}
 					}
 					builder.Append(@"""");

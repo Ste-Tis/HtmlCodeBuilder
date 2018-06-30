@@ -1,7 +1,7 @@
 ﻿using System;
 using HtmlCodeBuilder;
 
-namespace HtmlCodeBuilderExmaple
+namespace HtmlCodeBuilderExample
 {
 	/// <summary>
 	/// Todo:

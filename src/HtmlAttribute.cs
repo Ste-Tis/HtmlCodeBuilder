@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Store a simple attribute for an HTML tag
 	/// </summary>
-	class HtmlAttribute
+	public class HtmlAttribute
 	{
 		/// <summary>
 		/// Name of the attribute
@@ -40,6 +40,24 @@
 		public static HtmlAttribute Create(string name, string value)
 		{
 			return new HtmlAttribute(name, value);
+		}
+
+		/// <inheritdoc />
+		public override bool Equals(object obj)
+		{
+			if(obj == null || obj.GetType() != this.GetType())
+			{
+				return false;
+			}
+
+			HtmlAttribute att = (HtmlAttribute)obj;
+			return (att.Name == Name && att.Value == Value);
+		}
+
+		/// <inheritdoc />
+		public override string ToString()
+		{
+			return $@"{Name}=""{Value}""";
 		}
 	}
 }
