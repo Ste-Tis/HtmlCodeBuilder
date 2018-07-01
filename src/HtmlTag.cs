@@ -217,7 +217,7 @@ namespace HtmlCodeBuilder
 		/// <returns>Updated instance of tag</returns>
 		public HtmlTag RemoveClass(string value)
 		{
-			Attributes.RemoveAll(e => e.Value == value);
+			Attributes.RemoveAll(e => e.Value == value && e.GetType() == typeof(HtmlClass));
 			if (Attributes.Count == 0)
 			{
 				Attributes = null;
@@ -313,6 +313,95 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
+		/// Add a new id to the tag
+		/// </summary>
+		/// <param name="htmlId">Id</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddId(HtmlId htmlId)
+		{
+			if (Attributes == null)
+			{
+				Attributes = new List<HtmlAttribute> { htmlId };
+			}
+			else
+			{
+				if (Attributes.Where(e => e.Name == htmlId.Name && e.Value == htmlId.Value).Count() == 0)
+				{
+					Attributes.Add(htmlId);
+				}
+			}
+
+			return this;
+		}
+
+		/// <summary>
+		/// Add a new id to the tag
+		/// </summary>
+		/// <param name="value">Name of the id</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddId(string value)
+		{
+			return AddId(new HtmlId(value));
+		}
+
+		/// <summary>
+		/// Add multiple ids to the tag
+		/// </summary>
+		/// <param name="htmlIds">Ids</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddIds(HtmlId[] htmlIds)
+		{
+			foreach (HtmlId value in htmlIds)
+			{
+				AddId(value);
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Add multiple ids to the tag
+		/// </summary>
+		/// <param name="values">Name of the ids</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddIds(string[] values)
+		{
+			foreach (string value in values)
+			{
+				AddId(new HtmlId(value));
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Remove all ids at once
+		/// </summary>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveAllIds()
+		{
+			Attributes.RemoveAll(e => e.GetType() == typeof(HtmlId));
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Remove id from the tag
+		/// </summary>
+		/// <param name="value">Name of the id</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag RemoveId(string value)
+		{
+			Attributes.RemoveAll(e => e.Value == value && e.GetType() == typeof(HtmlId));
+			if (Attributes.Count == 0)
+			{
+				Attributes = null;
+			}
+			return this;
+		}
+
+		/// <summary>
 		/// Add child to the tag
 		/// </summary>
 		/// <param name="child">Child tag</param>
@@ -371,11 +460,11 @@ namespace HtmlCodeBuilder
 		}
 
 		/// <summary>
-		/// Remove a specific child from the tag
+		/// Remove a specific child from the tag. First child of type is numbered with Zero.
 		/// </summary>
 		/// <remarks>
 		/// Call:
-		///	 RemoveChild("td", 2);
+		///	 RemoveChild("td", 1);
 		/// 
 		/// Before:
 		///	 <tr>

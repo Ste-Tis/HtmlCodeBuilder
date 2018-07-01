@@ -20,6 +20,8 @@ namespace HtmlCodeBuilderTests
 		private readonly string styleName2 = "color";
 		private readonly string styleValue1 = "Tahoma";
 		private readonly string styleValue2 = "#999";
+		private readonly string idValue1 = "main";
+		private readonly string idValue2 = "footer";
 		private readonly string tagName1 = "p";
 		private readonly string tagName2 = "p";
 		private readonly string tagName3 = "div";
@@ -135,17 +137,19 @@ namespace HtmlCodeBuilderTests
 			var htmlAtt2 = new HtmlAttribute(attName2, attValue2);
 			var htmlStyle = new HtmlStyle(styleName2, styleValue2);
 			var htmlClass = new HtmlClass(classValue1);
+			var htmlId = new HtmlId(idValue1);
 
 			var obj = new HtmlTag(type, content, false);
 			obj.AddAttribute(htmlAtt1);
 			obj.AddAttribute(htmlAtt2);
 			obj.AddStyle(htmlStyle);
 			obj.AddClass(htmlClass);
-
+			obj.AddId(htmlId);
 			Assert.IsType<HtmlTag>(obj.RemoveAllAttributes());
-			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Equal(3, obj.Attributes.Count);
 			Assert.Contains(htmlStyle, obj.Attributes);
 			Assert.Contains(htmlClass, obj.Attributes);
+			Assert.Contains(htmlId, obj.Attributes);
 			Assert.DoesNotContain(htmlAtt1, obj.Attributes);
 			Assert.DoesNotContain(htmlAtt2, obj.Attributes);
 
@@ -213,7 +217,7 @@ namespace HtmlCodeBuilderTests
 		/// Test adding multiple new classes
 		/// </summary>
 		[Fact]
-		public void AddAClassesTest()
+		public void AddClassesTest()
 		{
 			var htmlClass1 = new HtmlClass(classValue1);
 			var htmlClass2 = new HtmlClass(classValue2);
@@ -249,17 +253,19 @@ namespace HtmlCodeBuilderTests
 			var htmlStyle = new HtmlStyle(styleName1, styleValue1);
 			var htmlClass1 = new HtmlClass(classValue1);
 			var htmlClass2 = new HtmlClass(classValue2);
+			var htmlId = new HtmlId(idValue1);
 
 			var obj = new HtmlTag(type, content, false);
 			obj.AddAttribute(htmlAtt);
 			obj.AddStyle(htmlStyle);
 			obj.AddClass(htmlClass1);
 			obj.AddClass(htmlClass2);
-
+			obj.AddId(htmlId);
 			Assert.IsType<HtmlTag>(obj.RemoveAllClasses());
-			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Equal(3, obj.Attributes.Count);
 			Assert.Contains(htmlAtt, obj.Attributes);
 			Assert.Contains(htmlStyle, obj.Attributes);
+			Assert.Contains(htmlId, obj.Attributes);
 			Assert.DoesNotContain(htmlClass1, obj.Attributes);
 			Assert.DoesNotContain(htmlClass2, obj.Attributes);
 
@@ -279,6 +285,7 @@ namespace HtmlCodeBuilderTests
 		{
 			var htmlClass1 = new HtmlClass(classValue1);
 			var htmlClass2 = new HtmlClass(classValue2);
+			var htmlId = new HtmlId(classValue1);
 
 			var obj = new HtmlTag(type, content, false);
 			obj.AddClass(htmlClass1);
@@ -292,6 +299,15 @@ namespace HtmlCodeBuilderTests
 			// Empty list to null
 			Assert.IsType<HtmlTag>(obj.RemoveClass(classValue2));
 			Assert.Null(obj.Attributes);
+
+			// Class and id with same name
+			obj = new HtmlTag(type, content, false);
+			obj.AddClass(htmlClass1);
+			obj.AddId(htmlId);
+			Assert.IsType<HtmlTag>(obj.RemoveClass(classValue1));
+			Assert.Single(obj.Attributes);
+			Assert.Contains(htmlId, obj.Attributes);
+			Assert.DoesNotContain(htmlClass1, obj.Attributes);
 		}
 
 		/// <summary>
@@ -368,17 +384,19 @@ namespace HtmlCodeBuilderTests
 			var htmlStyle1 = new HtmlStyle(styleName1, styleValue1);
 			var htmlStyle2 = new HtmlStyle(styleName2, styleValue2);
 			var htmlClass = new HtmlClass(classValue1);
+			var htmlId = new HtmlId(idValue1);
 
 			var obj = new HtmlTag(type, content, false);
 			obj.AddAttribute(htmlAtt);
 			obj.AddStyle(htmlStyle1);
 			obj.AddStyle(htmlStyle2);
 			obj.AddClass(htmlClass);
-
+			obj.AddId(htmlId);
 			Assert.IsType<HtmlTag>(obj.RemoveAllStyles());
-			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Equal(3, obj.Attributes.Count);
 			Assert.Contains(htmlAtt, obj.Attributes);
 			Assert.Contains(htmlClass, obj.Attributes);
+			Assert.Contains(htmlId, obj.Attributes);
 			Assert.DoesNotContain(htmlStyle1, obj.Attributes);
 			Assert.DoesNotContain(htmlStyle2, obj.Attributes);
 
@@ -410,6 +428,133 @@ namespace HtmlCodeBuilderTests
 			// Empty list to null
 			obj.RemoveStyle(styleName1);
 			Assert.Null(obj.Attributes);
+		}
+
+		/// <summary>
+		/// Test adding new id
+		/// </summary>
+		[Fact]
+		public void AddIdTest()
+		{
+			var htmlId1 = new HtmlId(idValue1);
+			var htmlId2 = new HtmlId(idValue2);
+
+			// Add objects directly
+			var obj = new HtmlTag(type, content, false);
+			Assert.IsType<HtmlTag>(obj.AddId(htmlId1));
+			Assert.IsType<HtmlTag>(obj.AddId(htmlId2));
+			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Contains(htmlId1, obj.Attributes);
+			Assert.Contains(htmlId2, obj.Attributes);
+			Assert.IsType<HtmlId>(obj.Attributes[0]);
+			Assert.IsType<HtmlId>(obj.Attributes[1]);
+
+			// Use strings
+			obj = new HtmlTag(type, content, false);
+			Assert.IsType<HtmlTag>(obj.AddId(idValue1));
+			Assert.IsType<HtmlTag>(obj.AddId(idValue2));
+			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Contains(htmlId1, obj.Attributes);
+			Assert.Contains(htmlId2, obj.Attributes);
+			Assert.IsType<HtmlId>(obj.Attributes[0]);
+			Assert.IsType<HtmlId>(obj.Attributes[1]);
+		}
+
+		/// <summary>
+		/// Test adding multiple new classes
+		/// </summary>
+		[Fact]
+		public void AddIdsTest()
+		{
+			var htmlId1 = new HtmlId(idValue1);
+			var htmlId2 = new HtmlId(idValue2);
+
+			// Add objects directly
+			var obj = new HtmlTag(type, content, false);
+			var attList = new[] { htmlId1, htmlId2 };
+			Assert.IsType<HtmlTag>(obj.AddIds(attList));
+			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Contains(htmlId1, obj.Attributes);
+			Assert.Contains(htmlId2, obj.Attributes);
+			Assert.IsType<HtmlId>(obj.Attributes[0]);
+			Assert.IsType<HtmlId>(obj.Attributes[1]);
+
+			// Use strings
+			obj = new HtmlTag(type, content, false);
+			var strList = new string[] { idValue1, idValue2 };
+			Assert.IsType<HtmlTag>(obj.AddIds(strList));
+			Assert.Equal(2, obj.Attributes.Count);
+			Assert.Contains(htmlId1, obj.Attributes);
+			Assert.Contains(htmlId2, obj.Attributes);
+			Assert.IsType<HtmlId>(obj.Attributes[0]);
+			Assert.IsType<HtmlId>(obj.Attributes[1]);
+		}
+
+		/// <summary>
+		/// Test removal of all classes at once
+		/// </summary>
+		[Fact]
+		public void RemoveAllIdsTest()
+		{
+			var htmlAtt = new HtmlAttribute(attName1, attValue1);
+			var htmlStyle = new HtmlStyle(styleName1, styleValue1);
+			var htmlClass = new HtmlClass(classValue1);
+			var htmlId1 = new HtmlId(idValue1);
+			var htmlId2 = new HtmlId(idValue2);
+
+			var obj = new HtmlTag(type, content, false);
+			obj.AddAttribute(htmlAtt);
+			obj.AddStyle(htmlStyle);
+			obj.AddClass(htmlClass);
+			obj.AddId(htmlId1);
+			obj.AddId(htmlId2);
+			Assert.IsType<HtmlTag>(obj.RemoveAllIds());
+			Assert.Equal(3, obj.Attributes.Count);
+			Assert.Contains(htmlAtt, obj.Attributes);
+			Assert.Contains(htmlStyle, obj.Attributes);
+			Assert.Contains(htmlClass, obj.Attributes);
+			Assert.DoesNotContain(htmlId1, obj.Attributes);
+			Assert.DoesNotContain(htmlId2, obj.Attributes);
+
+			// Empty list to null
+			obj = new HtmlTag(type, content, false);
+			obj.AddId(htmlId1);
+			obj.AddId(htmlId2);
+			Assert.IsType<HtmlTag>(obj.RemoveAllIds());
+			Assert.Null(obj.Attributes);
+		}
+
+		/// <summary>
+		/// Test removal of a specific class
+		/// </summary>
+		[Fact]
+		public void RemoveIdTest()
+		{
+			var htmlId1 = new HtmlId(idValue1);
+			var htmlId2 = new HtmlId(idValue2);
+			var htmlClass = new HtmlClass(idValue1);
+
+			var obj = new HtmlTag(type, content, false);
+			obj.AddId(htmlId1);
+			obj.AddId(htmlId2);
+			obj.AddId(htmlId1);
+			Assert.IsType<HtmlTag>(obj.RemoveId(idValue1));
+			Assert.Single(obj.Attributes);
+			Assert.Contains(htmlId2, obj.Attributes);
+			Assert.DoesNotContain(htmlId1, obj.Attributes);
+
+			// Empty list to null
+			Assert.IsType<HtmlTag>(obj.RemoveId(idValue2));
+			Assert.Null(obj.Attributes);
+
+			// Class and id with same name
+			obj = new HtmlTag(type, content, false);
+			obj.AddId(htmlId1);
+			obj.AddClass(htmlClass);
+			Assert.IsType<HtmlTag>(obj.RemoveId(idValue1));
+			Assert.Single(obj.Attributes);
+			Assert.Contains(htmlClass, obj.Attributes);
+			Assert.DoesNotContain(htmlId1, obj.Attributes);
 		}
 
 		/// <summary>
@@ -529,6 +674,8 @@ namespace HtmlCodeBuilderTests
 			var htmlStyle2 = new HtmlStyle(styleName2, styleValue2);
 			var htmlClass1 = new HtmlClass(classValue1);
 			var htmlClass2 = new HtmlClass(classValue2);
+			var htmlId1 = new HtmlId(idValue1);
+			var htmlId2 = new HtmlId(idValue2);
 			var htmlTag1 = new HtmlTag(tagName1, tagValue1);
 			var htmlTag2 = new HtmlTag(tagName2, tagValue2);
 			var htmlTag3 = new HtmlTag(tagName3, tagValue3);
@@ -552,7 +699,8 @@ namespace HtmlCodeBuilderTests
 			htmlTag3.RemoveAllChildren();
 
 			// Test correct creation of attributes, classes and styles - Remove duplicated values
-			resExp = $@"<{type} {attName1}=""{attValue1}"" {attName2}=""{attValue2}"" class=""{classValue2} {classValue1}"" style=""{styleName2}: {styleValue2}; {styleName1}: {styleValue1};"" />" + "\n";
+			resExp = $"<{type} {attName1}=\"{attValue1}\" {attName2}=\"{attValue2}\" class=\"{classValue2} {classValue1}\" id=\"{idValue2} {idValue1}\" " +
+					 $"style=\"{styleName2}: {styleValue2}; {styleName1}: {styleValue1};\" />\n";
 			obj = HtmlTag.Create(type);
 			obj.AddClass(htmlClass1);
 			obj.AddClass(htmlClass2);
@@ -560,6 +708,8 @@ namespace HtmlCodeBuilderTests
 			obj.AddAttribute(htmlAtt1);
 			obj.AddAttribute(htmlAtt2);
 			obj.AddAttribute(htmlAtt2);
+			obj.AddId(htmlId1);
+			obj.AddId(htmlId2);
 			obj.AddStyle(htmlStyle1);
 			obj.AddStyle(htmlStyle2);
 			obj.AddStyle(htmlStyle2);
