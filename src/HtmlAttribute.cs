@@ -1,4 +1,6 @@
-﻿namespace HtmlCodeBuilder
+﻿using System.Collections.Generic;
+
+namespace HtmlCodeBuilder
 {
 	/// <summary>
 	/// Store a simple attribute for an HTML tag
@@ -52,6 +54,15 @@
 
 			HtmlAttribute att = (HtmlAttribute)obj;
 			return (att.Name == Name && att.Value == Value);
+		}
+
+		/// <inheritdoc />
+		public override int GetHashCode()
+		{
+			var hashCode = -244751520;
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+			return hashCode;
 		}
 
 		/// <inheritdoc />

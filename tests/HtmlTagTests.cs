@@ -37,7 +37,6 @@ namespace HtmlCodeBuilderTests
 		{
 			var obj = new HtmlTag();
 			Assert.Null(obj.Type);
-			Assert.Null(obj.Content);
 			Assert.Null(obj.Attributes);
 			Assert.Null(obj.Children);
 		}
@@ -48,19 +47,27 @@ namespace HtmlCodeBuilderTests
 		[Fact]
 		public void SetValuesConstructorTest()
 		{
-			// Encode content
-			var obj = new HtmlTag(type, content);
+			// No content
+			var obj = new HtmlTag(type);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(contentEncoded, obj.Content);
 			Assert.Null(obj.Attributes);
 			Assert.Null(obj.Children);
+
+			// Encode content
+			obj = new HtmlTag(type, content);
+			Assert.Equal(type, obj.Type);
+			Assert.Null(obj.Attributes);
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(contentEncoded, ((HtmlText)obj.Children[0]).Content);
 
 			// Raw content
 			obj = new HtmlTag(type, content, false);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(content, obj.Content);
 			Assert.Null(obj.Attributes);
-			Assert.Null(obj.Children);
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(content, ((HtmlText)obj.Children[0]).Content);
 		}
 
 		/// <summary>
@@ -566,7 +573,7 @@ namespace HtmlCodeBuilderTests
 			var htmlTag1 = new HtmlTag(tagName1, tagValue1);
 			var htmlTag2 = new HtmlTag(tagName3, tagValue3);
 
-			var obj = new HtmlTag(type, content, false);
+			var obj = new HtmlTag(type);
 			Assert.IsType<HtmlTag>(obj.AddChild(htmlTag1));
 			Assert.IsType<HtmlTag>(obj.AddChild(htmlTag2));
 			Assert.Equal(2, obj.Children.Count);
@@ -585,7 +592,7 @@ namespace HtmlCodeBuilderTests
 			var htmlTag1 = new HtmlTag(tagName1, tagValue1);
 			var htmlTag2 = new HtmlTag(tagName3, tagValue3);
 
-			var obj = new HtmlTag(type, content, false);
+			var obj = new HtmlTag(type);
 			var chList = new[] { htmlTag1, htmlTag2 };
 			Assert.IsType<HtmlTag>(obj.AddChildren(chList));
 			Assert.Equal(2, obj.Children.Count);
@@ -605,7 +612,7 @@ namespace HtmlCodeBuilderTests
 			var htmlTag2 = new HtmlTag(tagName2, tagValue2);
 			var htmlTag3 = new HtmlTag(tagName3, tagValue3);
 
-			var obj = new HtmlTag(type, content, false);
+			var obj = new HtmlTag(type);
 			var chList = new[] { htmlTag1, htmlTag2, htmlTag3 };
 			obj.AddChildren(chList);
 
@@ -624,7 +631,7 @@ namespace HtmlCodeBuilderTests
 			var htmlTag2 = new HtmlTag(tagName2, tagValue2);
 			var htmlTag3 = new HtmlTag(tagName3, tagValue3);
 
-			var obj = new HtmlTag(type, content, false);
+			var obj = new HtmlTag(type);
 			var chList = new[] { htmlTag1, htmlTag2, htmlTag3 };
 			obj.AddChildren(chList);
 
@@ -650,7 +657,7 @@ namespace HtmlCodeBuilderTests
 			var htmlTag2 = new HtmlTag(tagName2, tagValue2);
 			var htmlTag3 = new HtmlTag(tagName3, tagValue3);
 
-			var obj = new HtmlTag(type, content, false);
+			var obj = new HtmlTag(type);
 			var chList = new[] { htmlTag1, htmlTag2, htmlTag3 };
 			obj.AddChildren(chList);
 
@@ -660,6 +667,51 @@ namespace HtmlCodeBuilderTests
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag3, obj.Children);
 			Assert.DoesNotContain(htmlTag2, obj.Children);
+
+			// Empty list to null
+			Assert.IsType<HtmlTag>(obj.RemoveChild(tagName2, 0));
+			Assert.IsType<HtmlTag>(obj.RemoveChild(tagName3, 0));
+			Assert.Null(obj.Children);
+		}
+
+		/// <summary>
+		/// Test adding new text
+		/// </summary>
+		[Fact]
+		public void AddTextTest()
+		{
+			// Encode content
+			var obj = new HtmlTag(type);
+			Assert.IsType<HtmlTag>(obj.AddText(content));
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(contentEncoded, ((HtmlText)obj.Children[0]).Content);
+
+			// Raw content
+			obj = new HtmlTag(type);
+			Assert.IsType<HtmlTag>(obj.AddText(content, false));
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(content, ((HtmlText)obj.Children[0]).Content);
+		}
+
+		/// <summary>
+		/// Test removal of a text element
+		/// </summary>
+		[Fact]
+		public void RemoveTextTest()
+		{
+			// Encode content
+			var obj = new HtmlTag(type);
+			obj.AddText(content, false);
+			obj.AddText(contentEncoded, false);
+			Assert.IsType<HtmlTag>(obj.RemoveText(0));
+			Assert.Single(obj.Children);
+			Assert.Equal(contentEncoded, ((HtmlText)obj.Children[0]).Content);
+
+			// Empty list to null
+			Assert.IsType<HtmlTag>(obj.RemoveText(0));
+			Assert.Null(obj.Children);
 		}
 
 		/// <summary>
@@ -719,6 +771,97 @@ namespace HtmlCodeBuilderTests
 		}
 
 		/// <summary>
+		/// Test comparison of two instances
+		/// </summary>
+		[Fact]
+		public void EqualsTest()
+		{
+			var htmlClass1 = HtmlClass.Create(classValue1);
+			var htmlClass2 = HtmlClass.Create(classValue2);
+			var htmlTag1 = HtmlTag.Create(tagName1);
+			var htmlTag2 = HtmlTag.Create(tagName3);
+
+			// Simple Tag
+			var orig = HtmlTag.Create(tagName1, content);
+			var copy = HtmlTag.Create(tagName1, content);
+			var other = HtmlTag.Create(tagName1, content, false);
+			var str = "not same";
+			Assert.True(orig.Equals(copy));
+			Assert.False(orig.Equals(other));
+			Assert.False(orig.Equals(null));
+			Assert.False(orig.Equals(str));
+
+			// Including children
+			orig = HtmlTag.Create(tagName1, content);
+			copy = HtmlTag.Create(tagName1, content);
+			other = HtmlTag.Create(tagName1, content);
+			var ext = HtmlTag.Create(tagName1, content);
+			orig.AddChild(htmlTag1);
+			copy.AddChild(htmlTag1);
+			other.AddChild(htmlTag2);
+			ext.AddChild(htmlTag1);
+			ext.AddChild(htmlTag2);
+			Assert.True(orig.Equals(copy));
+			Assert.False(orig.Equals(other));
+			Assert.False(orig.Equals(null));
+			Assert.False(orig.Equals(ext));
+
+			// Including attributes
+			orig = HtmlTag.Create(tagName1, content);
+			copy = HtmlTag.Create(tagName1, content);
+			other = HtmlTag.Create(tagName1, content);
+			ext = HtmlTag.Create(tagName1, content);
+			orig.AddClass(htmlClass1);
+			copy.AddClass(htmlClass1);
+			other.AddClass(htmlClass2);
+			ext.AddClass(htmlClass1);
+			ext.AddClass(htmlClass2);
+			Assert.True(orig.Equals(copy));
+			Assert.False(orig.Equals(other));
+			Assert.False(orig.Equals(null));
+			Assert.False(orig.Equals(ext));
+		}
+
+		/// <summary>
+		/// Test hash creation
+		/// </summary>
+		[Fact]
+		public void GetHashCodeTest()
+		{
+			var htmlClass1 = HtmlClass.Create(classValue1);
+			var htmlClass2 = HtmlClass.Create(classValue2);
+			var htmlTag1 = HtmlTag.Create(tagName1);
+			var htmlTag2 = HtmlTag.Create(tagName3);
+
+			// Simple Tag
+			var orig = HtmlTag.Create(tagName1, content);
+			var copy = HtmlTag.Create(tagName1, content);
+			var other = HtmlTag.Create(tagName1, content, false);
+			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
+
+			// Including children
+			orig = HtmlTag.Create(tagName1, content);
+			copy = HtmlTag.Create(tagName1, content);
+			other = HtmlTag.Create(tagName1, content);
+			orig.AddChild(htmlTag1);
+			copy.AddChild(htmlTag1);
+			other.AddChild(htmlTag2);
+			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
+
+			// Including attributes
+			orig = HtmlTag.Create(tagName1, content);
+			copy = HtmlTag.Create(tagName1, content);
+			other = HtmlTag.Create(tagName1, content);
+			orig.AddClass(htmlClass1);
+			copy.AddClass(htmlClass1);
+			other.AddClass(htmlClass2);
+			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
+		}
+
+		/// <summary>
 		/// Test the different static ways to create a tag
 		/// </summary>
 		[Fact]
@@ -731,85 +874,94 @@ namespace HtmlCodeBuilderTests
 			var htmlTag1 = new HtmlTag(tagName1, tagValue1);
 			var htmlTag2 = new HtmlTag(tagName2, tagValue2);
 			var tagArray = new[] { htmlTag1, htmlTag2 };
-			var tagList = new List<HtmlTag>() { htmlTag1, htmlTag2 };
+			var tagList = new List<HtmlElement>() { htmlTag1, htmlTag2 };
+			var contentElementRaw = new HtmlText(content, false);
+			var contentElementEnc = new HtmlText(content);
 
 			// Only type
 			var obj = HtmlTag.Create(type);
 			Assert.Equal(type, obj.Type);
-			Assert.Null(obj.Content);
 			Assert.Null(obj.Children);
 			Assert.Null(obj.Attributes);
 
 			// Type, encoded content
 			obj = HtmlTag.Create(type, content);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(contentEncoded, obj.Content);
-			Assert.Null(obj.Children);
 			Assert.Null(obj.Attributes);
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(contentEncoded, ((HtmlText)obj.Children[0]).Content);
 
 			// Type, raw content
 			obj = HtmlTag.Create(type, content, false);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(content, obj.Content);
-			Assert.Null(obj.Children);
 			Assert.Null(obj.Attributes);
+			Assert.Single(obj.Children);
+			Assert.IsType<HtmlText>(obj.Children[0]);
+			Assert.Equal(content, ((HtmlText)obj.Children[0]).Content);
 
 			// Type, encoded content, one child
 			obj = HtmlTag.Create(type, content, htmlTag1);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(contentEncoded, obj.Content);
+			Assert.Equal(2, obj.Children.Count);
+			Assert.Contains(contentElementEnc, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
+			Assert.Equal(contentElementEnc, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Single(obj.Children);
+
 
 			// Type, raw content, one child
 			obj = HtmlTag.Create(type, content, htmlTag1, false);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(content, obj.Content);
+			Assert.Equal(2, obj.Children.Count);
+			Assert.Contains(contentElementRaw, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
+			Assert.Equal(contentElementRaw, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Single(obj.Children);
 
 			// Type, encoded content, multiple child (list)
 			obj = HtmlTag.Create(type, content, tagList);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(contentEncoded, obj.Content);
+			Assert.Equal(3, obj.Children.Count);
+			Assert.Contains(contentElementEnc, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
+			Assert.Equal(contentElementEnc, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Equal(2, obj.Children.Count);
 
 			// Type, raw content, multiple child (list)
 			obj = HtmlTag.Create(type, content, tagList, false);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(content, obj.Content);
+			Assert.Equal(3, obj.Children.Count);
+			Assert.Contains(contentElementRaw, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
+			Assert.Equal(contentElementRaw, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Equal(2, obj.Children.Count);
 
 			// Type, encoded content, multiple child (array)
 			obj = HtmlTag.Create(type, content, tagArray);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(contentEncoded, obj.Content);
+			Assert.Equal(3, obj.Children.Count);
+			Assert.Contains(contentElementEnc, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
+			Assert.Equal(contentElementEnc, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Equal(2, obj.Children.Count);
 
 			// Type, raw content, multiple child (array)
 			obj = HtmlTag.Create(type, content, tagArray, false);
 			Assert.Equal(type, obj.Type);
-			Assert.Equal(content, obj.Content);
+			Assert.Equal(3, obj.Children.Count);
+			Assert.Contains(contentElementRaw, obj.Children);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
+			Assert.Equal(contentElementRaw, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-			Assert.Equal(2, obj.Children.Count);
 
 			// Type, one child
 			obj = HtmlTag.Create(type, htmlTag1);
 			Assert.Equal(type, obj.Type);
-			Assert.Null(obj.Content);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Null(obj.Attributes);
 			Assert.Single(obj.Children);
@@ -817,7 +969,6 @@ namespace HtmlCodeBuilderTests
 			// Type, multiple child (list)
 			obj = HtmlTag.Create(type, tagList);
 			Assert.Equal(type, obj.Type);
-			Assert.Null(obj.Content);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
 			Assert.Null(obj.Attributes);
@@ -826,7 +977,6 @@ namespace HtmlCodeBuilderTests
 			// Type, multiple child (array)
 			obj = HtmlTag.Create(type, tagArray);
 			Assert.Equal(type, obj.Type);
-			Assert.Null(obj.Content);
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Contains(htmlTag2, obj.Children);
 			Assert.Null(obj.Attributes);

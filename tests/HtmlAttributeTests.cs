@@ -46,7 +46,7 @@ namespace HtmlCodeBuilderTests
 		}
 
 		/// <summary>
-		/// Check comparison of two instances
+		/// Test comparison of two instances
 		/// </summary>
 		[Fact]
 		public void EqualsTest()
@@ -59,6 +59,19 @@ namespace HtmlCodeBuilderTests
 			Assert.False(orig.Equals(other));
 			Assert.False(orig.Equals(null));
 			Assert.False(orig.Equals(str));
+		}
+
+		/// <summary>
+		/// Test hash creation
+		/// </summary>
+		[Fact]
+		public void GetHashCodeTest()
+		{
+			var orig = HtmlAttribute.Create(name, value);
+			var copy = HtmlAttribute.Create(name, value);
+			var other = HtmlAttribute.Create("not", "same");
+			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
 		}
 
 		/// <summary>
