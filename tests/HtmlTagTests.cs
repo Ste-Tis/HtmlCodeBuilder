@@ -12,8 +12,10 @@ namespace HtmlCodeBuilderTests
 		private readonly string contentEncoded = "Lorem ipsum &lt;b&gt;dolor&lt;/b&gt; sit amet";
 		private readonly string attName1 = "att_1";
 		private readonly string attName2 = "att_2";
+		private readonly string attName3 = "onclick";
 		private readonly string attValue1 = "some value";
 		private readonly string attValue2 = "some other value";
+		private readonly string attValue3 = "myFunction('pos1')";
 		private readonly string classValue1 = "no-border";
 		private readonly string classValue2 = "bold";
 		private readonly string styleName1 = "font-family";
@@ -78,6 +80,7 @@ namespace HtmlCodeBuilderTests
 		{
 			var htmlAtt1 = new HtmlAttribute(attName1, attValue1);
 			var htmlAtt2 = new HtmlAttribute(attName2, attValue2);
+			var htmlAtt3 = new HtmlAttribute(attName3, attValue3);
 
 			// Add objects directly
 			var obj = new HtmlTag(type, content, false);
@@ -98,6 +101,12 @@ namespace HtmlCodeBuilderTests
 			Assert.Contains(htmlAtt2, obj.Attributes);
 			Assert.IsType<HtmlAttribute>(obj.Attributes[0]);
 			Assert.IsType<HtmlAttribute>(obj.Attributes[1]);
+
+			// Add JS attribute
+			obj = new HtmlTag(type, content, false);
+			Assert.IsType<HtmlTag>(obj.AddAttribute(attName3, attValue3));
+			Assert.Contains(htmlAtt3, obj.Attributes);
+			Assert.IsType<HtmlAttribute>(obj.Attributes[0]);
 		}
 
 		/// <summary>

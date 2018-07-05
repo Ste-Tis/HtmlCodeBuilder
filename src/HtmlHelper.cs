@@ -8,7 +8,7 @@ namespace HtmlCodeBuilder
 	/// <summary>
 	/// Special methods to help construct HTML code
 	/// </summary>
-	internal static class HtmlHelper
+	public static class HtmlHelper
 	{
 		/// <summary>
 		/// Add a new value to the values list of the dictionary

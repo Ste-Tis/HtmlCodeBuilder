@@ -9,7 +9,7 @@ namespace HtmlCodeBuilder.Examples
 			var html = HtmlTag.Create("p", new HtmlElement[] {
 				HtmlText.Create("Lorem ipsum dolor sit amet, consetetur sadipscing elitr."),
 				HtmlTag.Create("figure", new[] {
-					HtmlTag.Create("img").AddAttribute("src", "https://upload.wikimedia.org/wikipedia/fr/c/c8/Assystem_Logo.jpg").AddStyles(
+					HtmlTag.Create("img").AddAttribute("src", "https://www.mysite.com/mylogo.png").AddStyles(
 						new[] { new[] {"width", "8cm"}, new[] {"height", "auto"} }
 					),
 					HtmlTag.Create("figcaption", "Assystem Logo")
