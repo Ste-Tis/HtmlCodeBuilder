@@ -17,10 +17,12 @@ var html = HtmlTag.Create("p", new HtmlElement[] {
 # Installation
 
 **Download the Source**
+
 Download the source and include it directly into your project. It's not that much.
 
 **Install NuGet-Package**
-Get the package at [nuget.org](https://www.nuget.org/packages/HtmlCodeBuilder/1.0.0)
+
+Get the package at [nuget.org](https://www.nuget.org/packages/HtmlCodeBuilder/1.0.2)
 
 Visual Studio:
 ```
@@ -37,6 +39,7 @@ dotnet add package HtmlCodeBuilder
 The examples give an good overview about the usage. It's not that complicated.
 
 **Create a single tag**
+
 A single tag can be created with one line of code.
 ```
 Input:
@@ -47,6 +50,7 @@ Output:
 ```
 
 **Add content**
+
 Add a bit of text to the tag.
 ```
 Input:
@@ -59,6 +63,7 @@ Output:
 ```
 
 **Style the text**
+
 Bring color to the screen.
 ```
 Input:
@@ -71,6 +76,7 @@ Output:
 ```
 
 **Put the style away and use a class**
+
 Style in the tag is ugly, use a class instead.
 ```
 Input:
@@ -85,6 +91,7 @@ Output:
 Ids can be used by replacing *AddClass()* with *AddId()*.
 
 **Add a JS action**
+
 Add JavaScript interaction to the tag.
 ```
 Input:
@@ -97,6 +104,7 @@ Output:
 ```
 
 **Highlight some parts of the text**
+
 Make the important words bold.
 ```
 Input:
@@ -120,6 +128,7 @@ Output:
 ```
 
 **Tags in tags? Of course!**
+
 Put other tags inside an tag.
 ```
 Input:
@@ -140,6 +149,7 @@ Output:
 ```
 
 **Mix text and tags inside a tag**
+
 You can also put normal text between the nestd tag.
 ```
 Input:
