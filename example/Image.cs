@@ -10,7 +10,7 @@ namespace HtmlCodeBuilder.Examples
 				HtmlText.Create("Lorem ipsum dolor sit amet, consetetur sadipscing elitr."),
 				HtmlTag.Create("figure", new[] {
 					HtmlTag.Create("img").AddAttribute("src", "https://www.mysite.com/mylogo.png").AddStyles(
-						new[] { new[] {"width", "8cm"}, new[] {"height", "auto"} }
+						new[] { "width", "8cm", "height", "auto" }
 					),
 					HtmlTag.Create("figcaption", "Assystem Logo")
 				}),

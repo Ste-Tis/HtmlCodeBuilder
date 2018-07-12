@@ -111,11 +111,28 @@ namespace HtmlCodeBuilder
 			return this;
 		}
 
-		/// <summary>
-		/// Remove all attributes at once
+        /// <summary>
+		/// Add multiple attributes to the tag
 		/// </summary>
+		/// <param name="htmlAttributes">Attributes</param>
 		/// <returns>Updated instance of tag</returns>
-		public HtmlTag RemoveAllAttributes()
+		public HtmlTag AddAttributes(string[] htmlAttributes)
+        {
+            for (int i = 0; i < htmlAttributes.Length; i += 2)
+            {
+                if (i + 1 < htmlAttributes.Length)
+                {
+                    AddAttribute(new HtmlAttribute(htmlAttributes[i], htmlAttributes[i + 1]));
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Remove all attributes at once
+        /// </summary>
+        /// <returns>Updated instance of tag</returns>
+        public HtmlTag RemoveAllAttributes()
 		{
 			Attributes.RemoveAll(e => e.GetType() == typeof(HtmlAttribute));
 			if (Attributes.Count == 0)
@@ -287,6 +304,23 @@ namespace HtmlCodeBuilder
 				if (style.Length >= 2)
 				{
 					AddStyle(new HtmlStyle(style[0], style[1]));
+				}
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Add multiple styles to the tag
+		/// </summary>
+		/// <param name="htmlStyles">Styles</param>
+		/// <returns>Updated instance of tag</returns>
+		public HtmlTag AddStyles(string[] htmlStyles)
+		{
+			for(int i = 0; i < htmlStyles.Length; i += 2)
+			{
+				if(i+1 < htmlStyles.Length)
+				{
+					AddStyle(new HtmlStyle(htmlStyles[i], htmlStyles[i + 1]));
 				}
 			}
 			return this;

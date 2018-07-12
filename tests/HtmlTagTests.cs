@@ -141,7 +141,19 @@ namespace HtmlCodeBuilderTests
 			Assert.Contains(htmlAtt2, obj.Attributes);
 			Assert.IsType<HtmlAttribute>(obj.Attributes[0]);
 			Assert.IsType<HtmlAttribute>(obj.Attributes[1]);
-		}
+
+            // Use string
+            obj = new HtmlTag(type, content, false);
+            var strList2 = new string[] {
+                attName1, attValue1, attName2, attValue2
+            };
+            Assert.IsType<HtmlTag>(obj.AddAttributes(strList2));
+            Assert.Equal(2, obj.Attributes.Count);
+            Assert.Contains(htmlAtt1, obj.Attributes);
+            Assert.Contains(htmlAtt2, obj.Attributes);
+            Assert.IsType<HtmlAttribute>(obj.Attributes[0]);
+            Assert.IsType<HtmlAttribute>(obj.Attributes[1]);
+        }
 
 		/// <summary>
 		/// Test removal of all attributes at once
@@ -388,7 +400,19 @@ namespace HtmlCodeBuilderTests
 			Assert.Contains(htmlStyle2, obj.Attributes);
 			Assert.IsType<HtmlStyle>(obj.Attributes[0]);
 			Assert.IsType<HtmlStyle>(obj.Attributes[1]);
-		}
+
+            // Use string
+            obj = new HtmlTag(type, content, false);
+            var strList2 = new string[] {
+                styleName1, styleValue1, styleName2, styleValue2
+            };
+            Assert.IsType<HtmlTag>(obj.AddStyles(strList2));
+            Assert.Equal(2, obj.Attributes.Count);
+            Assert.Contains(htmlStyle1, obj.Attributes);
+            Assert.Contains(htmlStyle2, obj.Attributes);
+            Assert.IsType<HtmlStyle>(obj.Attributes[0]);
+            Assert.IsType<HtmlStyle>(obj.Attributes[1]);
+        }
 
 		/// <summary>
 		/// Test removal of all styles at once
@@ -917,7 +941,6 @@ namespace HtmlCodeBuilderTests
 			Assert.Contains(htmlTag1, obj.Children);
 			Assert.Equal(contentElementEnc, obj.Children[0]);
 			Assert.Null(obj.Attributes);
-
 
 			// Type, raw content, one child
 			obj = HtmlTag.Create(type, content, htmlTag1, false);
