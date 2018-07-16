@@ -3,72 +3,96 @@ using HtmlCodeBuilder;
 
 namespace HtmlCodeBuilderTests
 {
-	public class HtmlClassTests
-	{
-		private readonly string name = "class";
-		private readonly string value = "no-border";
+    public class HtmlClassTests
+    {
+        private readonly string name = "class";
+        private readonly string value = "no-border";
 
-		/// <summary>
-		/// Test constructor without args
-		/// </summary>
-		[Fact]
-		public void EmptyConstructorTest()
-		{
-			var obj = new HtmlClass();
-			Assert.Equal(name, obj.Name);
-			Assert.Null(obj.Value);
-		}
+        [Fact]
+        public void Constructor_Empty()
+        {
+            // Act
+            var obj = new HtmlClass();
 
-		/// <summary>
-		/// Test constructor setting all values
-		/// </summary>
-		[Fact]
-		public void SetValuesConstructorTest()
-		{
-			var obj = new HtmlClass(value);
-			Assert.Equal(name, obj.Name);
-			Assert.Equal(value, obj.Value);
-		}
+            // Assert
+            Assert.Equal(name, obj.Name);
+            Assert.Null(obj.Value);
+        }
 
-		/// <summary>
-		/// Test static creation
-		/// </summary>
-		[Fact]
-		public void CreateTest()
-		{
-			// All values must be set
-			var obj = HtmlClass.Create(value);
-			Assert.Equal(name, obj.Name);
-			Assert.Equal(value, obj.Value);
+        [Fact]
+        public void Constructor_SetValues()
+        {
+            // Act
+            var obj = new HtmlClass(value);
 
-			// Check return value
-			Assert.IsType<HtmlClass>(obj);
-		}
+            // Assert
+            Assert.Equal(name, obj.Name);
+            Assert.Equal(value, obj.Value);
+        }
 
-		/// <summary>
-		/// Check comparison of two instances
-		/// </summary>
-		[Fact]
-		public void EqualsTest()
-		{
-			var orig = HtmlClass.Create(value);
-			var copy = HtmlClass.Create(value);
-			var other = HtmlClass.Create("not same");
-			var str = $@"{name}=""{value}""";
-			Assert.True(orig.Equals(copy));
-			Assert.False(orig.Equals(other));
-			Assert.False(orig.Equals(null));
-			Assert.False(orig.Equals(str));
-		}
+        [Fact]
+        public void Create_ReturnNewInstance()
+        {
+            // Act
+            var obj = HtmlClass.Create(value);
 
-		/// <summary>
-		/// Test conversion to string
-		/// </summary>
-		[Fact]
-		public void ToStringTest()
-		{
-			var obj = HtmlClass.Create(value);
-			Assert.Equal($@"{name}=""{value}""", obj.ToString());
-		}
-	}
+            // Assert
+            Assert.Equal(name, obj.Name);
+            Assert.Equal(value, obj.Value);
+            Assert.IsType<HtmlClass>(obj);
+        }
+
+        [Fact]
+        public void Equals_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlClass.Create(value);
+            var copy = HtmlClass.Create(value);
+            
+            // Assert
+            Assert.True(orig.Equals(copy));
+        }
+
+        [Fact]
+        public void Equals_IsNotEqual()
+        {
+            // Arrange
+            var orig = HtmlClass.Create(value);
+            var other = HtmlClass.Create("not same");
+            
+            // Assert
+            Assert.False(orig.Equals(other));
+        }
+
+        [Fact]
+        public void Equals_OtherObject()
+        {
+            // Arrange
+            var orig = HtmlClass.Create(value);
+            var str = $@"{name}=""{value}""";
+
+            // Assert
+            Assert.False(orig.Equals(str));
+        }
+
+        [Fact]
+        public void Equals_Null()
+        {
+            // Arrange
+            var orig = HtmlClass.Create(value);
+
+            // Assert
+            Assert.False(orig.Equals(null));
+        }
+
+        [Fact]
+        public void ToString_ReturnString()
+        {
+            // Act
+            var obj = HtmlClass.Create(value);
+
+            // Assert
+            Assert.Equal($@"{name}=""{value}""", obj.ToString());
+        }
+    }
 }

@@ -3,85 +3,118 @@ using HtmlCodeBuilder;
 
 namespace HtmlCodeBuilderTests
 {
-	public class HtmlAttributeTests
-	{
-		private readonly string name = "Name";
-		private readonly string value = "Egon Olsen";
+    public class HtmlAttributeTests
+    {
+        private readonly string name = "Name";
+        private readonly string value = "Egon Olsen";
 
-		/// <summary>
-		/// Test constructor without args
-		/// </summary>
-		[Fact]
-		public void EmptyConstructorTest()
-		{
-			var obj = new HtmlAttribute();
-			Assert.Null(obj.Name);
-			Assert.Null(obj.Value);
-		}
+        [Fact]
+        public void Constructor_Empty()
+        {
+            // Act
+            var obj = new HtmlAttribute();
 
-		/// <summary>
-		/// Test constructor setting all values
-		/// </summary>
-		[Fact]
-		public void SetValuesConstructorTest()
-		{
-			var obj = new HtmlAttribute(name, value);
-			Assert.Equal(name, obj.Name);
-			Assert.Equal(value, obj.Value);
-		}
+            // Assert
+            Assert.Null(obj.Name);
+            Assert.Null(obj.Value);
+        }
 
-		/// <summary>
-		/// Test static creation
-		/// </summary>
-		[Fact]
-		public void CreateTest()
-		{
-			// All values must be set
-			var obj = HtmlAttribute.Create(name, value);
-			Assert.Equal(name, obj.Name);
-			Assert.Equal(value, obj.Value);
+        [Fact]
+        public void Constructor_SetValues()
+        {
+            // Act
+            var obj = new HtmlAttribute(name, value);
 
-			// Check return value
-			Assert.IsType<HtmlAttribute>(obj);
-		}
+            // Assert
+            Assert.Equal(name, obj.Name);
+            Assert.Equal(value, obj.Value);
+        }
 
-		/// <summary>
-		/// Test comparison of two instances
-		/// </summary>
-		[Fact]
-		public void EqualsTest()
-		{
-			var orig = HtmlAttribute.Create(name, value);
-			var copy = HtmlAttribute.Create(name, value);
-			var other = HtmlAttribute.Create("not", "same");
-			var str = $@"{name}=""{value}""";
-			Assert.True(orig.Equals(copy));
-			Assert.False(orig.Equals(other));
-			Assert.False(orig.Equals(null));
-			Assert.False(orig.Equals(str));
-		}
+        [Fact]
+        public void Create_ReturnNewInstance()
+        {
+            // Act
+            var obj = HtmlAttribute.Create(name, value);
 
-		/// <summary>
-		/// Test hash creation
-		/// </summary>
-		[Fact]
-		public void GetHashCodeTest()
-		{
-			var orig = HtmlAttribute.Create(name, value);
-			var copy = HtmlAttribute.Create(name, value);
-			var other = HtmlAttribute.Create("not", "same");
-			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
-			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
-		}
+            // Assert
+            Assert.Equal(name, obj.Name);
+            Assert.Equal(value, obj.Value);
+            Assert.IsType<HtmlAttribute>(obj);
+        }
 
-		/// <summary>
-		/// Test conversion to string
-		/// </summary>
-		[Fact]
-		public void ToStringTest()
-		{
-			var obj = HtmlAttribute.Create(name, value);
-			Assert.Equal($@"{name}=""{value}""", obj.ToString());
-		}
-	}
+        [Fact]
+        public void Equals_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+            var copy = HtmlAttribute.Create(name, value);
+
+            // Assert
+            Assert.True(orig.Equals(copy));
+        }
+
+        [Fact]
+        public void Equals_IsNotEqual()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+            var other = HtmlAttribute.Create("not", "same");
+            
+            // Assert
+            Assert.False(orig.Equals(other));
+        }
+
+        [Fact]
+        public void Equals_OtherObject()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+            var str = $@"{name}=""{value}""";
+
+            // Assert
+            Assert.False(orig.Equals(str));
+        }
+
+        [Fact]
+        public void Equals_Null()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+
+            // Assert
+            Assert.False(orig.Equals(null));
+        }
+
+        [Fact]
+        public void GetHashCode_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+            var copy = HtmlAttribute.Create(name, value);
+
+            // Assert
+            Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_IsNotEqual()
+        {
+            // Arrange
+            var orig = HtmlAttribute.Create(name, value);
+            var other = HtmlAttribute.Create("not", "same");
+            
+            // Assert
+            Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
+        }
+
+        [Fact]
+        public void ToString_ReturnString()
+        {
+            // Arrange
+            var obj = HtmlAttribute.Create(name, value);
+
+            // Assert
+            Assert.Equal($@"{name}=""{value}""", obj.ToString());
+        }
+    }
 }

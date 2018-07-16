@@ -3,88 +3,146 @@ using HtmlCodeBuilder;
 
 namespace HtmlCodeBuilderTests
 {
-	public class HtmlTextTests
-	{
-		private readonly string contentRaw = "some <b>content</b>";
-		private readonly string contentEncoded = "some &lt;b&gt;content&lt;/b&gt;";
+    public class HtmlTextTests
+    {
+        private readonly string contentRaw = "some <b>content</b>";
+        private readonly string contentEncoded = "some &lt;b&gt;content&lt;/b&gt;";
 
-		/// <summary>
-		/// Test constructor without args
-		/// </summary>
-		[Fact]
-		public void EmptyConstructorTest()
-		{
-			var obj = new HtmlText();
-			Assert.Null(obj.Content);
-		}
+        [Fact]
+        public void Constrcutor_Empty()
+        {
+            // Act
+            var obj = new HtmlText();
 
-		/// <summary>
-		/// Test constructor setting all values
-		/// </summary>
-		[Fact]
-		public void SetValuesConstructorTest()
-		{
-			var obj = new HtmlText(contentRaw);
-			Assert.Equal(contentEncoded, obj.Content);
+            // Assert
+            Assert.Null(obj.Content);
+        }
 
-			obj = new HtmlText(contentRaw, false);
-			Assert.Equal(contentRaw, obj.Content);
-		}
+        [Fact]
+        public void Constrcutor_SetValues_Encode()
+        {
+            // Act
+            var obj = new HtmlText(contentRaw);
 
+            // Assert
+            Assert.Equal(contentEncoded, obj.Content);
+        }
 
-		/// <summary>
-		/// Test conversion to string
-		/// </summary>
-		[Fact]
-		public void ToStringTest()
-		{
-			var obj = HtmlText.Create(contentRaw);
-			Assert.Equal($"{contentEncoded}\n", obj.ToString());
-			Assert.Equal($"\t{contentEncoded}\n", obj.ToString(1));
-		}
+        [Fact]
+        public void Constrcutor_SetValues_Raw()
+        {
+            // Act
+            var obj = new HtmlText(contentRaw, false);
 
-		/// <summary>
-		/// Test static creation
-		/// </summary>
-		[Fact]
-		public void CreateTest()
-		{
-			var obj = HtmlText.Create(contentRaw);
-			Assert.Equal(contentEncoded, obj.Content);
-			Assert.IsType<HtmlText>(obj);
+            // Assert
+            Assert.Equal(contentRaw, obj.Content);
+        }
 
-			obj = HtmlText.Create(contentRaw, false);
-			Assert.Equal(contentRaw, obj.Content);
-			Assert.IsType<HtmlText>(obj);
-		}
+        [Fact]
+        public void ToString_ReturnString_NoIndent()
+        {
+            // Arrange
+            var obj = HtmlText.Create(contentRaw);
 
-		/// <summary>
-		/// Check comparison of two instances
-		/// </summary>
-		[Fact]
-		public void EqualsTest()
-		{
-			var orig = HtmlText.Create(contentRaw, false);
-			var copy = HtmlText.Create(contentRaw, false);
-			var other = HtmlText.Create(contentEncoded, false);
-			var str = "not same";
-			Assert.True(orig.Equals(copy));
-			Assert.False(orig.Equals(other));
-			Assert.False(orig.Equals(null));
-			Assert.False(orig.Equals(str));
-		}
+            // Assert
+            Assert.Equal($"{contentEncoded}\n", obj.ToString());
+        }
 
-		/// <summary>
-		/// Test hash creation
-		/// </summary>
-		[Fact]
-		public void GetHashCodeTest()
-		{
-			var orig = HtmlText.Create(contentRaw, false);
-			var copy = HtmlText.Create(contentRaw, false);
-			var other = HtmlText.Create(contentEncoded, false);
-			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
-			Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
-		}
-	}
+        [Fact]
+        public void ToString_ReturnString_Indent()
+        {
+            // Arrange
+            var obj = HtmlText.Create(contentRaw);
+
+            // Assert
+            Assert.Equal($"\t{contentEncoded}\n", obj.ToString(1));
+        }
+
+        [Fact]
+        public void Create_ReturnNewInstance_Encode()
+        {
+            // Act
+            var obj = HtmlText.Create(contentRaw);
+
+            // Assert
+            Assert.Equal(contentEncoded, obj.Content);
+            Assert.IsType<HtmlText>(obj);
+        }
+
+        [Fact]
+        public void Create_ReturnNewInstance_Raw()
+        {
+            // Act
+            var obj = HtmlText.Create(contentRaw, false);
+
+            // Assert
+            Assert.Equal(contentRaw, obj.Content);
+            Assert.IsType<HtmlText>(obj);
+        }
+
+        [Fact]
+        public void Equals_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+            var copy = HtmlText.Create(contentRaw, false);
+
+            // Assert
+            Assert.True(orig.Equals(copy));
+        }
+
+        [Fact]
+        public void Equals_IsNotEqual()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+            var other = HtmlText.Create(contentEncoded, false);
+
+            // Assert
+            Assert.False(orig.Equals(other));
+        }
+
+        [Fact]
+        public void Equals_OtherObject()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+            var str = "not same";
+
+            // Assert
+            Assert.False(orig.Equals(str));
+        }
+
+        [Fact]
+        public void Equals_Null()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+
+            // Assert
+            Assert.False(orig.Equals(null));
+        }
+
+        [Fact]
+        public void GetHashCode_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+            var copy = HtmlText.Create(contentRaw, false);
+
+            // Assert
+            Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_IsNotEqual()
+        {
+            // Arrange
+            var orig = HtmlText.Create(contentRaw, false);
+            var other = HtmlText.Create(contentEncoded, false);
+
+            // Assert
+            Assert.NotEqual(orig.GetHashCode(), other.GetHashCode());
+        }
+    }
 }

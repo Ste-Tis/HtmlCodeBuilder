@@ -3,53 +3,70 @@ using HtmlCodeBuilder;
 
 namespace HtmlCodeBuilderTests
 {
-	public class HtmlElementTests
-	{
-		/// <summary>
-		/// Test conversion to string
-		/// </summary>
-		[Fact]
-		public void ToStringTest()
-		{
-			var obj = HtmlElement.Create();
-			Assert.Equal("", obj.ToString());
-			Assert.Equal("", obj.ToString(1));
-		}
+    public class HtmlElementTests
+    {
+        [Fact]
+        public void ToString_ReturnString()
+        {
+            // Arrange
+            var obj = HtmlElement.Create();
 
-		/// <summary>
-		/// Test static creation
-		/// </summary>
-		[Fact]
-		public void CreateTest()
-		{
-			// All values must be set
-			var obj = HtmlElement.Create();
-			Assert.IsType<HtmlElement>(obj);
-		}
+            // Assert
+            Assert.Equal("", obj.ToString());
+            Assert.Equal("", obj.ToString(1));
+        }
 
-		/// <summary>
-		/// Check comparison of two instances
-		/// </summary>
-		[Fact]
-		public void EqualsTest()
-		{
-			var orig = HtmlElement.Create();
-			var copy = HtmlElement.Create();
-			var str = "not same";
-			Assert.True(orig.Equals(copy));
-			Assert.False(orig.Equals(null));
-			Assert.False(orig.Equals(str));
-		}
+        [Fact]
+        public void Create_ReturnNewInstance()
+        {
+            // Act
+            var obj = HtmlElement.Create();
 
-		/// <summary>
-		/// Test hash creation
-		/// </summary>
-		[Fact]
-		public void GetHashCodeTest()
-		{
-			var orig = HtmlElement.Create();
-			var copy = HtmlElement.Create();
-			Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
-		}
-	}
+            // Assert
+            Assert.IsType<HtmlElement>(obj);
+        }
+
+        [Fact]
+        public void Equals_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlElement.Create();
+            var copy = HtmlElement.Create();
+            
+            // Assert
+            Assert.True(orig.Equals(copy));
+        }
+
+        [Fact]
+        public void Equals_OtherObject()
+        {
+            // Arrange
+            var orig = HtmlElement.Create();
+            var str = "not same";
+
+            // Assert
+            Assert.False(orig.Equals(str));
+        }
+
+        [Fact]
+        public void Equals_Null()
+        {
+            // Arrange
+            var orig = HtmlElement.Create();
+
+            // Assert
+            Assert.False(orig.Equals(null));
+        }
+
+        [Fact]
+        public void GetHashCode_IsEqual()
+        {
+            // Arrange
+            var orig = HtmlElement.Create();
+            var copy = HtmlElement.Create();
+
+            // Assert
+            Assert.Equal(orig.GetHashCode(), copy.GetHashCode());
+        }
+    }
 }
